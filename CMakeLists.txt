@@ -25,11 +25,16 @@ qt_add_executable(tetris
 
     src/ui/GameWidget.cpp
     src/ui/include/GameWidget.hpp
+
+    src/game/Board.cpp
+    src/game/Game.cpp
+    src/game/Pieces.cpp
 )
 
 target_include_directories(tetris PRIVATE
     ${CMAKE_SOURCE_DIR}/src/ui/include
-
+    ${CMAKE_SOURCE_DIR}/src/game/include
+    ${CMAKE_SOURCE_DIR}/src/game
 )
 
 target_link_libraries(tetris PRIVATE
