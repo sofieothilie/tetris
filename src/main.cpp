@@ -51,7 +51,7 @@ int main(void) {
   std::cout << "Initialisation Complete.\n" << std::endl;
 
   std::cout << "Playing game. wooo<3.\n" << std::endl;
-  
+
   while (!mIO.IsKeyDown(SDLK_ESCAPE)) {
 
     mIO.ClearScreen();
@@ -95,8 +95,8 @@ int main(void) {
       break;
     case SDLK_x:
     case SDLK_SPACE: // Drop piece
-      while (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY + 1, mGame.mPiece,
-                                       mGame.mRotation)) {
+      while (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY + 1,
+                                       mGame.mPiece, mGame.mRotation)) {
         mGame.mPosY++;
       }
       mBoard.StorePiece(mGame.mPosX, mGame.mPosY, mGame.mPiece,
@@ -110,7 +110,9 @@ int main(void) {
       mGame.CreateNewPiece();
       break;
 
-    case SDLK_z: case SDLK_UP: case SDLK_w: // Rotate piece
+    case SDLK_z:
+    case SDLK_UP:
+    case SDLK_w: // Rotate piece
       if (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY, mGame.mPiece,
                                     (mGame.mRotation + 1) % 4)) {
         mGame.mRotation = (mGame.mRotation + 1) % 4;
