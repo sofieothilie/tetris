@@ -15,12 +15,16 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+find_package(SDL2 REQUIRED)
+
 include_directories(${CMAKE_SOURCE_DIR}/src/include)
 
 add_executable(tetris
     src/main.cpp
     src/system/Pieces.cpp
     src/system/Board.cpp
+    src/system/Game.cpp
+    src/system/IO.cpp
 )
 
 target_include_directories(tetris PRIVATE
