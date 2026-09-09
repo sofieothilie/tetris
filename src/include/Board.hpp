@@ -12,6 +12,7 @@
 #define BLOCK_SIZE 16 // Width and Height of each block of a piece
 #define BOARD_POSITION                                                         \
   320 // Center position of the board from the left of the screen
+#define BOARD_VERTICAL_OFFSET 40
 #define BOARD_WIDTH 10         // Board width in blocks
 #define BOARD_HEIGHT 20        // Board height in blocks
 #define MIN_VERTICAL_MARGIN 20 // Minimum vertical margin for the board limit
@@ -36,6 +37,7 @@ private:
 
 public:
   Board(Pieces *pPieces, int pScreenHeight);
+  ~Board();
   int GetXPosInPixels(int pPos);
   int GetYPosInPixels(int pPos);
   bool IsFreeBlock(int pX, int pY);

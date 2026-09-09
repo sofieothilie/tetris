@@ -11,7 +11,7 @@
 #define WAIT_TIME                                                              \
   700 // Number of milliseconds that the piece remains before going 1 block down
       // */
-#define MAX_PIECES 6 // 0 indexed
+#define MAX_PIECES 6   // 0 indexed
 #define MAX_ROTATION 3 // 0 indexed
 
 // ——————————————————————————–
@@ -35,6 +35,7 @@ private:
 
 public:
   Game(Board *pBoard, Pieces *pPieces, IO *pIO, int pScreenHeight);
+  ~Game();
   void DrawScene();
   void CreateNewPiece();
 

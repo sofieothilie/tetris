@@ -53,9 +53,10 @@ Parameters:
 */
 void Board::DeleteLine(int pY) {
   for (int i = 0; i < BOARD_WIDTH; i++) {
-    for (int j = pY; j < BOARD_HEIGHT; j++) {
+    for (int j = pY; j > 0; j--) {
       mBoard[i][j] = mBoard[i][j - 1];
     }
+    mBoard[i][0] = POS_FREE;
   }
 }
 
@@ -83,8 +84,10 @@ Parameters:
 ======================================
 */
 int Board::GetYPosInPixels(int pPos) {
-  return ((BOARD_POSITION - (BLOCK_SIZE * (BOARD_HEIGHT / 2))) +
-          (pPos * BLOCK_SIZE));
+  int boardTop = mScreenHeight - BOARD_VERTICAL_OFFSET - BOARD_LINE_WIDTH -
+                 (BLOCK_SIZE * BOARD_HEIGHT);
+
+  return boardTop + pPos * BLOCK_SIZE;
 }
 /*
 ======================================
@@ -118,14 +121,13 @@ bool Board::IsPossibleMovement(int pX, int pY, int pPiece, int pRotation) {
       bool pieceFilled = mPieces->GetBlockType(pPiece, pRotation, i2, j2);
 
       // Check if piece is outside board
-      if ((i1 < 0 || i1 > BOARD_WIDTH - 1 || j2 > BOARD_HEIGHT - 1) &&
-          pieceFilled) {
+      if (pieceFilled && (i1 < 0 || i1 >= BOARD_WIDTH || j1 >= BOARD_HEIGHT)) {
         return false;
       }
 
       // Check if block is already occupied and piece covers block.
       // Bypasses j1 to allow pieces to enter the board before they are checked.
-      if (j1 > 0 || !IsFreeBlock(i1, j1) && pieceFilled) {
+      if (pieceFilled && j1 >= 0 && !IsFreeBlock(i1, j1)) {
         return false;
       }
     }
@@ -139,15 +141,18 @@ Delete all the lines that should be removed
 ======================================
 */
 void Board::DeletePossibleLines() {
+  // NOTE: Iterates over the height first, hence why indexing here is [j][i]
   for (int i = 0; i < BOARD_HEIGHT; i++) {
     bool filled = true;
-    for (int j = 0; i < BOARD_WIDTH; i++) {
-      if (mBoard[i][j] != POS_FILLED)
+    for (int j = 0; j < BOARD_WIDTH; j++) {
+      if (mBoard[j][i] != POS_FILLED) {
         filled = false;
-      break;
+        break;
+      }
     }
     if (filled) {
       DeleteLine(i);
+      i--;
     }
   }
 }

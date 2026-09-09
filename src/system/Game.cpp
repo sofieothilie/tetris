@@ -7,7 +7,7 @@
 #include <random>
 using namespace std;
 
-Game::Game(Board *pBoard, Pieces *pPieces, IO *pIO, int pScreenHeight)) {
+Game::Game(Board *pBoard, Pieces *pPieces, IO *pIO, int pScreenHeight) {
   mBoard = pBoard;
   mPieces = pPieces;
   mIO = pIO;
@@ -89,24 +89,20 @@ void Game::DrawPiece(int pX, int pY, int pPiece, int pRotation) {
   colour mColour;
 
   // Obtain the position in pixel in the screen of the block we want to draw
-  int mPixelsX = mBoard->GetXPosInPixels(mPosX);
-  int mPixelsY = mBoard->GetYPosInPixels(mPosY);
+  int mPixelsX = mBoard->GetXPosInPixels(pX);
+  int mPixelsY = mBoard->GetYPosInPixels(pY);
 
   // Travel the matrix of blocks of the piece and draw the blocks that are
   // filled
-  for (int i = 0, j = 0; i < PIECE_BLOCKS; i++, j++) {
-    switch (mPieces->GetBlockType(pPiece, pRotation, pX, pY)) {
-    case 1:
-      mColour = GREEN;
-      break;
-    case 2:
-      mColour = BLUE;
-      break;
-    default:
-      break;
-    }
+  for (int i = 0; i < PIECE_BLOCKS; i++) {
+    for (int j = 0; j < PIECE_BLOCKS; j++) {
+      int blockType = mPieces->GetBlockType(pPiece, pRotation, i, j);
+      if (blockType == 0) {
+        continue;
+      }
 
-    if (mPieces->GetBlockType(mPiece, mRotation, pX, pY) != 0) {
+      mColour = blockType == 1 ? GREEN : BLUE;
+
       mIO->DrawRectangle(mPixelsX + i * BLOCK_SIZE, mPixelsY + j * BLOCK_SIZE,
                          mPixelsX + (i + 1) * BLOCK_SIZE - 1,
                          mPixelsY + (j + 1) * BLOCK_SIZE - 1, mColour);
@@ -126,21 +122,25 @@ void Game::DrawBoard() {
   // Calculate the limits of the board in pixels
   int mX1 = BOARD_POSITION - (BLOCK_SIZE * (BOARD_WIDTH / 2));
   int mX2 = BOARD_POSITION + (BLOCK_SIZE * (BOARD_WIDTH / 2));
-  int mY = mScreenHeight - (BLOCK_SIZE * BOARD_HEIGHT);
+  int mY = mScreenHeight - BOARD_VERTICAL_OFFSET - BOARD_LINE_WIDTH -
+           (BLOCK_SIZE * BOARD_HEIGHT);
   assert(mY > MIN_VERTICAL_MARGIN);
 
+  int boardBottom = mY + BLOCK_SIZE * BOARD_HEIGHT;
+  int borderBottom = boardBottom + BOARD_LINE_WIDTH;
+
   // Colourise the outer edges of the board
-  mIO->DrawRectangle(mX1 - BOARD_LINE_WIDTH - 1, mY, mX1 - 1, mScreenHeight - 1,
+  mIO->DrawRectangle(mX1 - BOARD_LINE_WIDTH - 1, mY, mX1 - 1, borderBottom - 1,
                      BLUE);
-  mIO->DrawRectangle(mX2, mY, mX2 + BOARD_LINE_WIDTH, mScreenHeight - 1, BLUE);
-  mIO->DrawRectangle(mX1 - BOARD_LINE_WIDTH - 1, mScreenHeight - 1,
-                     mX2 + BOARD_LINE_WIDTH,
-                     mScreenHeight - 1 - BOARD_LINE_WIDTH, BLUE);
+
+  mIO->DrawRectangle(mX2, mY, mX2 + BOARD_LINE_WIDTH, borderBottom - 1, BLUE);
+  mIO->DrawRectangle(mX1 - BOARD_LINE_WIDTH - 1, boardBottom,
+                     mX2 + BOARD_LINE_WIDTH, borderBottom - 1, BLUE);
 
   // Colourise the occupied blocks inside the board
   for (int i = 0; i < BOARD_WIDTH; i++) {
     for (int j = 0; j < BOARD_HEIGHT; j++) {
-      if (mBoard->IsFreeBlock(i, j)) {
+      if (!(mBoard->IsFreeBlock(i, j))) {
         mIO->DrawRectangle(mX1 + i * BLOCK_SIZE, mY + j * BLOCK_SIZE,
                            mX1 + (i + 1) * BLOCK_SIZE - 1,
                            mY + (j + 1) * BLOCK_SIZE - 1, RED);
