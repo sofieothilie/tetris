@@ -35,7 +35,7 @@ Parameters:
 void Board::StorePiece(int pX, int pY, int pPiece, int pRotation) {
   for (int i1 = pX, i2 = 0; i1 < pX + PIECE_BLOCKS; i1++, i2++) {
     for (int j1 = pY, j2 = 0; j1 < pY + PIECE_BLOCKS; j1++, j2++) {
-      if (mPieces->GetBlockType(pPiece, pRotation, i2, j2) != 0) {
+      if (mPieces->GetBlockType(pPiece, pRotation, i2, j2) > 0) {
         mBoard[i1][j1] = POS_FILLED;
       }
     }
