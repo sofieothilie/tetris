@@ -13,23 +13,25 @@ project(Tetris LANGUAGES CXX)
 # C11 is widely supported and provides a good baseline for embedded development.
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(SDL2 REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
-include_directories(${CMAKE_SOURCE_DIR}/src/include)
+qt_standard_project_setup()
 
-add_executable(tetris
+qt_add_executable(tetris
     src/main.cpp
-    src/system/Pieces.cpp
-    src/system/Board.cpp
-    src/system/Game.cpp
-    src/system/IO.cpp
+    src/ui/MainWindow.cpp
+    src/ui/include/MainWindow.hpp
+
+    src/ui/GameWidget.cpp
+    src/ui/include/GameWidget.hpp
 )
 
 target_include_directories(tetris PRIVATE
-    ${CMAKE_SOURCE_DIR}/src/include
-    ${SDL2_INCLUDE_DIRS}
+    ${CMAKE_SOURCE_DIR}/src/ui/include
+
 )
 
-target_link_libraries(tetris PRIVATE ${SDL2_LIBRARIES})
+target_link_libraries(tetris PRIVATE
+    Qt6::Widgets
+)
