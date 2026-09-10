@@ -25,6 +25,8 @@ qt_add_executable(tetris
 
     src/ui/GameWidget.cpp
     src/ui/include/GameWidget.hpp
+    src/ui/BoardRenderer.cpp
+    src/ui/include/BoardRenderer.hpp
 
     src/game/Board.cpp
     src/game/Game.cpp
