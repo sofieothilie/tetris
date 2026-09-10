@@ -40,7 +40,7 @@ public:
   void Drop();
   void Rotate();
 
-  int GetPositionX() const; 
+  int GetPositionX() const;
   int GetPositionY() const;
   int GetPiece() const;
   int GetRotation() const;
