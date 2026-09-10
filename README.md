@@ -7,4 +7,5 @@
 ## How to Play
 
 ## Requirements:
-libsdl2-dev
+qmake6
+qt6-base-dev

@@ -1,8 +1,7 @@
 #include "Board.hpp"
 
-Board::Board(Pieces *pPieces, int pScreenHeight) {
+Board::Board(Pieces *pPieces) {
   mPieces = pPieces;
-  mScreenHeight = pScreenHeight;
 
   InitBoard();
 };
@@ -60,35 +59,6 @@ void Board::DeleteLine(int pY) {
   }
 }
 
-/*
-======================================
-Returns the horizontal position (in pixels) of the block given like parameter
-
-Parameters:
-
->> pPos: Horizontal position of the block in the board
-======================================
-*/
-int Board::GetXPosInPixels(int pPos) {
-  return ((BOARD_POSITION - (BLOCK_SIZE * (BOARD_WIDTH / 2))) +
-          (pPos * BLOCK_SIZE));
-}
-
-/*
-======================================
-Returns the vertical position (in pixels) of the block given like parameter
-
-Parameters:
-
->> pPos: Vertical position of the block in the board
-======================================
-*/
-int Board::GetYPosInPixels(int pPos) {
-  int boardTop = mScreenHeight - BOARD_VERTICAL_OFFSET - BOARD_LINE_WIDTH -
-                 (BLOCK_SIZE * BOARD_HEIGHT);
-
-  return boardTop + pPos * BLOCK_SIZE;
-}
 /*
 ======================================
 Returns 1 (true) if the this block of the board is empty, 0 if it is filled

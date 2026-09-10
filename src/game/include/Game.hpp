@@ -2,7 +2,6 @@
 #define _GAME_
 
 #include "Board.hpp"
-#include "IO.hpp"
 #include "Pieces.hpp"
 #include <time.h>
 
@@ -20,26 +19,27 @@
 
 class Game {
 private:
-  int mScreenHeight;             // Screen height in pixels
-  int mNextPosX, mNextPosY;      // Position of the next piece
-  int mNextPiece, mNextRotation; // Kind and rotation of next piece
-
   Board *mBoard;
   Pieces *mPieces;
-  IO *mIO;
 
   int GetRand(int pA, int pB);
   void InitGame();
-  void DrawPiece(int pX, int pY, int pPiece, int pRotation);
-  void DrawBoard();
 
 public:
-  Game(Board *pBoard, Pieces *pPieces, IO *pIO, int pScreenHeight);
+  Game(Board *pBoard, Pieces *pPieces);
   ~Game();
-  void DrawScene();
   void CreateNewPiece();
+  void UpdateGame();
+  void Update();
+  void MoveLeft();
+  void MoveRight();
+  void MoveDown();
+  void Drop();
+  void Rotate();
 
-  int mPosX, mPosY;      // Position of the piece that is falling down
-  int mPiece, mRotation; // Kind and rotation of the piece thats falling down
+  int mPosX, mPosY;         // Position of the piece that is falling down
+  int mPiece, mRotation;    // Kind and rotation of the piece thats falling down
+  int mNextPosX, mNextPosY; // Position of the next piece
+  int mNextPiece, mNextRotation; // Kind and rotation of next piece
 };
 #endif
