@@ -1,11 +1,11 @@
 #include "MainWindow.hpp"
+
 #include <QGridLayout>
 #include <QLabel>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <iostream>
 
 /**
  * @brief Creates the main application window.
@@ -16,31 +16,23 @@
  * @param QWidget parent Optional Qt parent widget.
  */
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), pGameWidget(new GameWidget(this)),
-      pMenuWidget(new MenuWidget(this)) {
+    : QMainWindow(parent), pGameWidget(new GameWidget(this)) {
   setWindowTitle("Tetris");
 
   auto *centralWidget = new QWidget(this);
-  auto *layout = new QVBoxLayout(centralWidget);
+  centralWidget->setFixedSize(488, 740);
+  auto *grid = new QGridLayout(centralWidget);
 
-  layout->addWidget(pMenuWidget);
+  // auto *topWidget = new QWidget(centralWidget);
+  // topWidget->setFixedHeight(100);
+
+  // grid->addWidget(topWidget, 0, 0);
+  grid->addWidget(pGameWidget, 0, 0);
+
+  // Row 1 receives all extra space.
+  // grid->setRowStretch(1, 1);
 
   setCentralWidget(centralWidget);
-
-  connect(pMenuWidget, &MenuWidget::newGameClicked, this,
-          &MainWindow::startNewGame);
-
-  connect(pMenuWidget, &MenuWidget::continueClicked, this,
-          &MainWindow::continueGame);
-
-  connect(pMenuWidget, &MenuWidget::highscoreClicked, this,
-          &MainWindow::showHighscores);
-
-  connect(pMenuWidget, &MenuWidget::settingsClicked, this,
-          &MainWindow::showSettings);
-
-  connect(pMenuWidget, &MenuWidget::quitClicked, this,
-          &QMainWindow::close); // Add an "Are you sure?"-pop up?
 }
 
 void MainWindow::paintEvent(QPaintEvent *event) {
@@ -53,25 +45,4 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 
   painter.drawPixmap(0, 0, scaledPixmap);
   QWidget::paintEvent(event);
-}
-
-void MainWindow::startNewGame() {
-  std::cout << "New game clicked" << std::endl;
-  // pGameWidget->startNewGame();
-}
-
-void MainWindow::continueGame() {
-  std::cout << "Continue clicked" << std::endl;
-
-  // pGameWidget->continueGame();
-}
-
-void MainWindow::showHighscores() {
-  std::cout << "show highscore clicked" << std::endl;
-  // Open or display the highscores view.
-}
-
-void MainWindow::showSettings() {
-  std::cout << "show settings clicked" << std::endl;
-  // Open or display the settings view.
 }
