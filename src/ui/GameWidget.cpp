@@ -8,10 +8,10 @@
 #include <QTimer>
 
 GameWidget::GameWidget(QWidget *parent)
-    : QWidget(parent), mPieces(), mBoard(new Board(mPieces)),
-      mGame(new Game(mBoard, mPieces)), mTimer(this) {
+    : QWidget(parent), mPieces(), mBoard(mPieces), mGame(mBoard, mPieces),
+      mTimer() {
   connect(&mTimer, &QTimer::timeout, this, [this] {
-    mGame->Update();
+    mGame.Update();
     update();
   });
 
@@ -48,7 +48,7 @@ void GameWidget::DrawPiece(QPainter &painter, int pX, int pY, int pPiece,
   // filled
   for (int i = 0; i < PIECE_BLOCKS; i++) {
     for (int j = 0; j < PIECE_BLOCKS; j++) {
-      int blockType = mPieces->GetBlockType(pPiece, pRotation, i, j);
+      int blockType = mPieces.GetBlockType(pPiece, pRotation, i, j);
       if (blockType == 0) {
         continue;
       }
@@ -98,7 +98,7 @@ void GameWidget::DrawBoard(QPainter &painter) {
   // Colourise the occupied blocks inside the board
   for (int i = 0; i < BOARD_WIDTH; i++) {
     for (int j = 0; j < BOARD_HEIGHT; j++) {
-      if (!(mBoard->IsFreeBlock(i, j))) {
+      if (!(mBoard.IsFreeBlock(i, j))) {
         painter.fillRect(mX1 + i * BLOCK_SIZE, mY + j * BLOCK_SIZE,
                          BLOCK_SIZE - 1, BLOCK_SIZE - 1, Qt::red);
       }
@@ -116,10 +116,12 @@ Draw all the objects of the scene
 void GameWidget::DrawScene(QPainter &painter) {
   DrawBoard(
       painter); // Draw the delimitation lines and blocks stored in the board
-  DrawPiece(painter, mGame->mPosX, mGame->mPosY, mGame->mPiece,
-            mGame->mRotation); // Draw the playing piece
-  DrawPiece(painter, mGame->mNextPosX, mGame->mNextPosY, mGame->mNextPiece,
-            mGame->mNextRotation); // Draw the next piece
+  DrawPiece(painter, mGame.GetPositionX(), mGame.GetPositionY(),
+            mGame.GetPiece(),
+            mGame.GetRotation()); // Draw the playing piece
+  DrawPiece(painter, mGame.GetNextPositionX(), mGame.GetNextPositionY(),
+            mGame.GetNextPiece(),
+            mGame.GetNextRotation()); // Draw the next piece
 }
 
 void GameWidget::keyPressEvent(QKeyEvent *event) {
@@ -128,28 +130,28 @@ void GameWidget::keyPressEvent(QKeyEvent *event) {
     return;
   case Qt::Key_Left:
   case Qt::Key_A:
-    mGame->MoveLeft();
+    mGame.MoveLeft();
     break;
 
   case Qt::Key_Right:
   case Qt::Key_D:
-    mGame->MoveRight();
+    mGame.MoveRight();
     break;
 
   case Qt::Key_Down:
   case Qt::Key_S:
-    mGame->MoveDown();
+    mGame.MoveDown();
     break;
 
   case Qt::Key_Space:
   case Qt::Key_X:
-    mGame->Drop();
+    mGame.Drop();
     break;
 
   case Qt::Key_Z:
   case Qt::Key_Up:
   case Qt::Key_W:
-    mGame->Rotate();
+    mGame.Rotate();
     break;
 
   default:

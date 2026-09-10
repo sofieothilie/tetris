@@ -20,13 +20,13 @@ class Board {
 private:
   enum { POS_FREE, POS_FILLED };
   int mBoard[BOARD_WIDTH][BOARD_HEIGHT];
-  Pieces *mPieces;
+  Pieces &mPieces;
 
   void InitBoard();
   void DeleteLine(int pY);
 
 public:
-  Board(Pieces *pPieces);
+  Board(Pieces &pPieces);
   ~Board();
   bool IsFreeBlock(int pX, int pY);
   bool IsPossibleMovement(int pX, int pY, int pPiece, int pRotation);

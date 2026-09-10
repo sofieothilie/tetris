@@ -21,9 +21,9 @@ protected:
   void keyPressEvent(QKeyEvent *event) override;
 
 private:
-  Pieces *mPieces;
-  Board *mBoard;
-  Game *mGame;
+  Pieces mPieces;
+  Board mBoard;
+  Game mGame;
   QTimer mTimer;
 
   int GetXPosInPixels(int pPos);

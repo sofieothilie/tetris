@@ -1,11 +1,6 @@
 #include "Board.hpp"
 
-Board::Board(Pieces *pPieces) {
-  mPieces = pPieces;
-
-  InitBoard();
-};
-Board::~Board() = default;
+Board::Board(Pieces &pPieces) : mPieces(pPieces) { InitBoard(); };
 /*
 ======================================
 Init the board blocks with free positions
@@ -34,7 +29,8 @@ Parameters:
 void Board::StorePiece(int pX, int pY, int pPiece, int pRotation) {
   for (int i1 = pX, i2 = 0; i1 < pX + PIECE_BLOCKS; i1++, i2++) {
     for (int j1 = pY, j2 = 0; j1 < pY + PIECE_BLOCKS; j1++, j2++) {
-      if (mPieces->GetBlockType(pPiece, pRotation, i2, j2) > 0) {
+      if (i1 >= 0 && i1 < BOARD_WIDTH && j1 >= 0 && j1 < BOARD_HEIGHT &&
+          mPieces.GetBlockType(pPiece, pRotation, i2, j2) > 0) {
         mBoard[i1][j1] = POS_FILLED;
       }
     }
@@ -88,7 +84,7 @@ bool Board::IsPossibleMovement(int pX, int pY, int pPiece, int pRotation) {
 
   for (int i1 = pX, i2 = 0; i1 < pX + PIECE_BLOCKS; i1++, i2++) {
     for (int j1 = pY, j2 = 0; j1 < pY + PIECE_BLOCKS; j1++, j2++) {
-      bool pieceFilled = mPieces->GetBlockType(pPiece, pRotation, i2, j2);
+      bool pieceFilled = mPieces.GetBlockType(pPiece, pRotation, i2, j2);
 
       // Check if piece is outside board
       if (pieceFilled && (i1 < 0 || i1 >= BOARD_WIDTH || j1 >= BOARD_HEIGHT)) {

@@ -19,14 +19,14 @@
 
 class Game {
 private:
-  Board *mBoard;
-  Pieces *mPieces;
+  Board &mBoard;
+  Pieces &mPieces;
 
   int GetRand(int pA, int pB);
   void InitGame();
 
 public:
-  Game(Board *pBoard, Pieces *pPieces);
+  Game(Board &pBoard, Pieces &pPieces);
   ~Game();
   void CreateNewPiece();
   void UpdateGame();

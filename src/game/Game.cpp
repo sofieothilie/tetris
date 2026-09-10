@@ -7,10 +7,7 @@
 #include <random>
 using namespace std;
 
-Game::Game(Board *pBoard, Pieces *pPieces) {
-  mBoard = pBoard;
-  mPieces = pPieces;
-
+Game::Game(Board &pBoard, Pieces &pPieces) : mBoard(pBoard), mPieces(pPieces) {
   InitGame();
 };
 Game::~Game() = default;
@@ -44,8 +41,8 @@ void Game::InitGame() {
   // Initialise the first piece with rotation and position
   mPiece = GetRand(0, MAX_PIECES);
   mRotation = GetRand(0, MAX_ROTATION);
-  mPosX = (BOARD_WIDTH / 2) + mPieces->GetXInitialPosition(mPiece, mRotation);
-  mPosY = mPieces->GetYInitialPosition(mPiece, mRotation);
+  mPosX = (BOARD_WIDTH / 2) + mPieces.GetXInitialPosition(mPiece, mRotation);
+  mPosY = mPieces.GetYInitialPosition(mPiece, mRotation);
 
   // Initialise the next piece with rotation. Sets position outside the board
   // for now.
@@ -64,8 +61,8 @@ void Game::CreateNewPiece() {
   // The new piece
   mPiece = mNextPiece;
   mRotation = mNextRotation;
-  mPosX = (BOARD_WIDTH / 2) + mPieces->GetXInitialPosition(mPiece, mRotation);
-  mPosY = mPieces->GetYInitialPosition(mPiece, mRotation);
+  mPosX = (BOARD_WIDTH / 2) + mPieces.GetXInitialPosition(mPiece, mRotation);
+  mPosY = mPieces.GetYInitialPosition(mPiece, mRotation);
 
   mNextPiece = GetRand(0, MAX_PIECES);
   mNextRotation = GetRand(0, MAX_ROTATION);
@@ -76,18 +73,18 @@ void Game::UpdateGame() {
 }
 
 void Game::MoveLeft() {
-  if (mBoard->IsPossibleMovement(mPosX - 1, mPosY, mPiece, mRotation)) {
+  if (mBoard.IsPossibleMovement(mPosX - 1, mPosY, mPiece, mRotation)) {
     mPosX--;
   }
 }
 void Game::MoveRight() {
-  if (mBoard->IsPossibleMovement(mPosX + 1, mPosY, mPiece, mRotation)) {
+  if (mBoard.IsPossibleMovement(mPosX + 1, mPosY, mPiece, mRotation)) {
     mPosX++;
   }
 }
 void Game::MoveDown() {
 
-  if (mBoard->IsPossibleMovement(mPosX, mPosY + 1, mPiece, mRotation)) {
+  if (mBoard.IsPossibleMovement(mPosX, mPosY + 1, mPiece, mRotation)) {
     mPosY++;
   } else {
     mBoard->StorePiece(mPosX, mPosY, mPiece, mRotation);
@@ -101,7 +98,7 @@ void Game::MoveDown() {
   }
 }
 void Game::Drop() {
-  while (mBoard->IsPossibleMovement(mPosX, mPosY + 1, mPiece, mRotation)) {
+  while (mBoard.IsPossibleMovement(mPosX, mPosY + 1, mPiece, mRotation)) {
     mPosY++;
   }
   mBoard->StorePiece(mPosX, mPosY, mPiece, mRotation);
@@ -115,14 +112,14 @@ void Game::Drop() {
 }
 
 void Game::Rotate() {
-  if (mBoard->IsPossibleMovement(mPosX, mPosY, mPiece, (mRotation + 1) % 4)) {
+  if (mBoard.IsPossibleMovement(mPosX, mPosY, mPiece, (mRotation + 1) % 4)) {
     mRotation = (mRotation + 1) % 4;
   }
 }
 
 void Game::Update() {
   // Move piece, detect collisions, store pieces, etc.
-  if (mBoard->IsPossibleMovement(mPosX, mPosY + 1, mPiece, mRotation)) {
+  if (mBoard.IsPossibleMovement(mPosX, mPosY + 1, mPiece, mRotation)) {
     mPosY++;
   } else {
     mBoard->StorePiece(mPosX, mPosY, mPiece, mRotation);
