@@ -21,6 +21,8 @@ GameWidget::GameWidget(QWidget *parent)
   layout->setContentsMargins(0, 0, 0, 0);
   layout->addWidget(mBoardRenderer);
 
+  mBoardRenderer->setMinimumHeight(368);
+
   mBoardRenderer->setFocusPolicy(Qt::NoFocus);
   setFocusPolicy(Qt::StrongFocus);
   setFocus();
@@ -36,7 +38,7 @@ GameWidget::GameWidget(QWidget *parent)
   mTimer.start(WAIT_TIME);
 }
 
-/**
+/**s
  * @brief Executes a task when a key is pressed
  * @param pEvent: triggered QKeyEvent
  */

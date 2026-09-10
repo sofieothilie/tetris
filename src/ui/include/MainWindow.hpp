@@ -8,6 +8,9 @@ class MainWindow : public QMainWindow {
 private:
   GameWidget *pGameWidget;
 
+protected:
+  void paintEvent(QPaintEvent *event) override;
+
 public:
   explicit MainWindow(QWidget *parent = nullptr);
 };
