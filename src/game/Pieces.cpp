@@ -184,7 +184,7 @@ Parameters:
 >> pY: Vertical position in blocks
 ======================================
 */
-int Pieces::GetBlockType(int pPiece, int pRotation, int pX, int pY) {
+int Pieces::GetBlockType(int pPiece, int pRotation, int pX, int pY) const {
   return mPieces[pPiece][pRotation][pY][pX];
 }
 
@@ -199,7 +199,7 @@ Parameters:
 >> pRotation: 1 of the 4 possible rotations
 ======================================
 */
-int Pieces::GetXInitialPosition(int pPiece, int pRotation) {
+int Pieces::GetXInitialPosition(int pPiece, int pRotation) const {
   return mPiecesInitialPosition[pPiece][pRotation][0];
 }
 
@@ -214,6 +214,6 @@ Parameters:
 >> pRotation: 1 of the 4 possible rotations
 ======================================
 */
-int Pieces::GetYInitialPosition(int pPiece, int pRotation) {
+int Pieces::GetYInitialPosition(int pPiece, int pRotation) const {
   return mPiecesInitialPosition[pPiece][pRotation][1];
 }

@@ -65,7 +65,9 @@ Parameters:
 >> pY: Vertical position in blocks
 ======================================
 */
-bool Board::IsFreeBlock(int pX, int pY) { return mBoard[pX][pY] == POS_FREE; }
+bool Board::IsFreeBlock(int pX, int pY) const {
+  return mBoard[pX][pY] == POS_FREE;
+}
 
 /*
 ======================================
@@ -80,7 +82,8 @@ Parameters:
 >> pRotation: 1 of the 4 possible rotations
 ======================================
 */
-bool Board::IsPossibleMovement(int pX, int pY, int pPiece, int pRotation) {
+bool Board::IsPossibleMovement(int pX, int pY, int pPiece,
+                               int pRotation) const {
 
   for (int i1 = pX, i2 = 0; i1 < pX + PIECE_BLOCKS; i1++, i2++) {
     for (int j1 = pY, j2 = 0; j1 < pY + PIECE_BLOCKS; j1++, j2++) {
@@ -130,7 +133,7 @@ Check if the game is over becase a piece have achived the upper position
 Returns true or false
 ======================================
 */
-bool Board::IsGameOver() {
+bool Board::IsGameOver() const {
   for (int i = 0; i < BOARD_WIDTH; i++) {
     if (mBoard[i][0] == POS_FILLED) {
       return true;

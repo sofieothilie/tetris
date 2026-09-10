@@ -171,7 +171,7 @@ Parameters:
 >> pPos: Horizontal position of the block in the board
 ======================================
 */
-int GameWidget::GetXPosInPixels(int pPos) {
+int GameWidget::GetXPosInPixels(int pPos) const {
   const int boardWidth = BLOCK_SIZE * BOARD_WIDTH;
   const int boardLeft = (width() - boardWidth) / 2;
 
@@ -186,7 +186,7 @@ Parameters:
 >> pPos: Vertical position of the block in the board
 ======================================
 */
-int GameWidget::GetYPosInPixels(int pPos) {
+int GameWidget::GetYPosInPixels(int pPos) const {
   return GetBoardTop() + pPos * BLOCK_SIZE;
 }
 
@@ -195,6 +195,6 @@ int GameWidget::GetYPosInPixels(int pPos) {
 Returns the vertical height of the board in pixels.
 ======================================
 */
-int GameWidget::GetBoardTop() {
+int GameWidget::GetBoardTop() const {
   return (this->height() - (BLOCK_SIZE * BOARD_HEIGHT + BOARD_LINE_WIDTH)) / 2;
 }
