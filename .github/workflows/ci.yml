@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-format cmake ninja-build qmake6
+          sudo apt-get install -y clang-format cmake ninja-build qmake6 qt6-base-dev
       
       - name: Check formatting
         run: |

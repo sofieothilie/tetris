@@ -8,3 +8,4 @@
 
 ## Requirements:
 qmake6
+qt6-base-dev
