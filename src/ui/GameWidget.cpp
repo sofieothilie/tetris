@@ -7,6 +7,13 @@
 #include <QPainter>
 #include <QTimer>
 
+/**
+ * @brief Widget responsible for displaying and controlling a Tetris game.
+ *
+ * Owns the game model, updates it through a timer, handles keyboard input,
+ * and renders the board and active pieces.
+ * @param QWidget parent: Optional Qt parent widget.
+ */
 GameWidget::GameWidget(QWidget *parent)
     : QWidget(parent), mPieces(), mBoard(mPieces), mGame(mBoard, mPieces),
       mTimer() {
@@ -21,22 +28,27 @@ GameWidget::GameWidget(QWidget *parent)
   mTimer.start(WAIT_TIME);
 }
 
+/**
+ * @brief Repaints the game widget.
+ *
+ * Qt calls this function whenever the widget needs to be redrawn. The current
+ * board state and active pieces are rendered using a QPainter.
+ *
+ * @param event Paint event supplied by Qt.
+ */
 void GameWidget::paintEvent(QPaintEvent *) {
   QPainter painter(this);
   DrawScene(painter);
 }
-/*
-======================================
-Draw piece
 
-Parameters:
-
->> pX: Horizontal position in blocks
->> pY: Vertical position in blocks
->> pPiece: Piece to draw
->> pRotation: 1 of the 4 possible rotations
-======================================
-*/
+/**
+ * @brief Draws a piece on the board
+ * @param pPainter Painter used for rendering.
+ * @param pX: Horizontal position in blocks
+ * @param pY: Vertical position in blocks
+ * @param pPiece: Piece to draw
+ * @param pRotation: 1 of the 4 possible rotations
+ */
 void GameWidget::DrawPiece(QPainter &painter, int pX, int pY, int pPiece,
                            int pRotation) {
 
@@ -59,14 +71,15 @@ void GameWidget::DrawPiece(QPainter &painter, int pX, int pY, int pPiece,
   }
 }
 
-/*
-======================================
-Draw board
-
-Draw the two lines that delimit the board
-======================================
-*/
-void GameWidget::DrawBoard(QPainter &painter) {
+/**
+ * @brief Draws the board boundary and occupied cells.
+ *
+ * Calculates the board position within the widget, draws its borders, and
+ * renders every occupied board cell.
+ *
+ * @param pPainter Painter used for rendering.
+ */
+void GameWidget::DrawBoard(QPainter &pPainter) {
 
   // Calculate the limits of the board in pixels
   const int boardWidth = BLOCK_SIZE * BOARD_WIDTH;
@@ -79,53 +92,58 @@ void GameWidget::DrawBoard(QPainter &painter) {
 
   // Colourise the outer edges of the board
   // Left edge
-  painter.fillRect(mX1 - BOARD_LINE_WIDTH - 1, mY, BOARD_LINE_WIDTH,
-                   boardBottom + BOARD_LINE_WIDTH - mY, Qt::blue);
+  pPainter.fillRect(mX1 - BOARD_LINE_WIDTH - 1, mY, BOARD_LINE_WIDTH,
+                    boardBottom + BOARD_LINE_WIDTH - mY, Qt::blue);
 
   // Right edge
-  painter.fillRect(mX2, mY, BOARD_LINE_WIDTH,
-                   boardBottom + BOARD_LINE_WIDTH - mY, Qt::blue);
+  pPainter.fillRect(mX2, mY, BOARD_LINE_WIDTH,
+                    boardBottom + BOARD_LINE_WIDTH - mY, Qt::blue);
 
   // Bottom edge
-  painter.fillRect(mX1 - BOARD_LINE_WIDTH - 1, boardBottom,
-                   mX2 + BOARD_LINE_WIDTH - (mX1 - BOARD_LINE_WIDTH - 1),
-                   BOARD_LINE_WIDTH, Qt::blue);
+  pPainter.fillRect(mX1 - BOARD_LINE_WIDTH - 1, boardBottom,
+                    mX2 + BOARD_LINE_WIDTH - (mX1 - BOARD_LINE_WIDTH - 1),
+                    BOARD_LINE_WIDTH, Qt::blue);
   // Bottom edge
-  painter.fillRect(mX1 - BOARD_LINE_WIDTH, GetBoardTop(),
-                   mX2 + BOARD_LINE_WIDTH - (mX1 - BOARD_LINE_WIDTH - 1),
-                   BOARD_LINE_WIDTH, Qt::blue);
+  pPainter.fillRect(mX1 - BOARD_LINE_WIDTH, GetBoardTop(),
+                    mX2 + BOARD_LINE_WIDTH - (mX1 - BOARD_LINE_WIDTH - 1),
+                    BOARD_LINE_WIDTH, Qt::blue);
 
   // Colourise the occupied blocks inside the board
   for (int i = 0; i < BOARD_WIDTH; i++) {
     for (int j = 0; j < BOARD_HEIGHT; j++) {
       if (!(mBoard.IsFreeBlock(i, j))) {
-        painter.fillRect(mX1 + i * BLOCK_SIZE, mY + j * BLOCK_SIZE,
-                         BLOCK_SIZE - 1, BLOCK_SIZE - 1, Qt::red);
+        pPainter.fillRect(mX1 + i * BLOCK_SIZE, mY + j * BLOCK_SIZE,
+                          BLOCK_SIZE - 1, BLOCK_SIZE - 1, Qt::red);
       }
     }
   }
 }
 
-/*
-======================================
-Draw scene
-
-Draw all the objects of the scene
-======================================
-*/
-void GameWidget::DrawScene(QPainter &painter) {
+/**
+ * @brief Draws the complete game scene.
+ *
+ * Renders the board and its occupied cells, followed by the currently falling
+ * piece and the preview of the next piece.
+ *
+ * @param pPainter Painter used for rendering.
+ */
+void GameWidget::DrawScene(QPainter &pPainter) {
   DrawBoard(
-      painter); // Draw the delimitation lines and blocks stored in the board
-  DrawPiece(painter, mGame.GetPositionX(), mGame.GetPositionY(),
+      pPainter); // Draw the delimitation lines and blocks stored in the board
+  DrawPiece(pPainter, mGame.GetPositionX(), mGame.GetPositionY(),
             mGame.GetPiece(),
             mGame.GetRotation()); // Draw the playing piece
-  DrawPiece(painter, mGame.GetNextPositionX(), mGame.GetNextPositionY(),
+  DrawPiece(pPainter, mGame.GetNextPositionX(), mGame.GetNextPositionY(),
             mGame.GetNextPiece(),
             mGame.GetNextRotation()); // Draw the next piece
 }
 
-void GameWidget::keyPressEvent(QKeyEvent *event) {
-  switch (event->key()) {
+/**
+ * @brief Executes a task when a key is pressed
+ * @param pEvent: triggered QKeyEvent
+ */
+void GameWidget::keyPressEvent(QKeyEvent *pEvent) {
+  switch (pEvent->key()) {
   case Qt::Key_Escape:
     return;
   case Qt::Key_Left:
@@ -155,46 +173,39 @@ void GameWidget::keyPressEvent(QKeyEvent *event) {
     break;
 
   default:
-    QWidget::keyPressEvent(event);
+    QWidget::keyPressEvent(pEvent);
     return;
   }
 
   update();
 }
 
-/*
-======================================
-Returns the horizontal position (in pixels) of the block given like parameter
-
-Parameters:
-
->> pPos: Horizontal position of the block in the board
-======================================
-*/
+/**
+ * @brief Returns the horizontal position (in pixels) of the block given like
+ * parameter
+ * @param pPos: Horizontal position of the block in the board
+ * @return X position in pixels as an int
+ */
 int GameWidget::GetXPosInPixels(int pPos) const {
   const int boardWidth = BLOCK_SIZE * BOARD_WIDTH;
   const int boardLeft = (width() - boardWidth) / 2;
 
   return boardLeft + pPos * BLOCK_SIZE;
 }
-/*
-======================================
-Returns the vertical position (in pixels) of the block given like parameter
-
-Parameters:
-
->> pPos: Vertical position of the block in the board
-======================================
+/**
+ * @brief Returns the vertical position (in pixels) of the block given like
+parameter
+* @param pPos: Vertical position of the block in the board
+* @return Y position in pixels as an int
 */
 int GameWidget::GetYPosInPixels(int pPos) const {
   return GetBoardTop() + pPos * BLOCK_SIZE;
 }
 
-/*
-======================================
-Returns the vertical height of the board in pixels.
-======================================
-*/
+/**
+ * @brief Returns the vertical height of the board in pixels.
+ * @return Height of board in pixels as an int
+ */
 int GameWidget::GetBoardTop() const {
   return (this->height() - (BLOCK_SIZE * BOARD_HEIGHT + BOARD_LINE_WIDTH)) / 2;
 }

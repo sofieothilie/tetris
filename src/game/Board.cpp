@@ -1,11 +1,17 @@
 #include "Board.hpp"
 
-Board::Board(Pieces &pPieces) : mPieces(pPieces) { InitBoard(); };
-/*
-======================================
-Init the board blocks with free positions
-======================================
-*/
+/**
+ * @brief Creates an empty board using the supplied piece definitions.
+ *
+ * The board keeps a reference to the piece definitions but does not own them.
+ *
+ * @param Pieces pPieces: Piece definitions used to inspect piece layouts.
+ */
+Board::Board(Pieces &pPieces) : mPieces(pPieces) { InitBoard(); }
+
+/**
+ * @brief Init the board blocks with free positions
+ */
 void Board::InitBoard() {
   for (int i = 0; i < BOARD_WIDTH; i++) {
     for (int j = 0; j < BOARD_HEIGHT; j++) {
@@ -14,18 +20,13 @@ void Board::InitBoard() {
   }
 }
 
-/*
-======================================
-Store a piece in the board by filling the blocks
-
-Parameters:
-
->> pX: Horizontal position in blocks
->> pY: Vertical position in blocks
->> pPiece: Piece to draw
->> pRotation: 1 of the 4 possible rotations
-======================================
-*/
+/**
+ * @brief Store a piece in the board by filling the blocks
+ * @param int pX: Horizontal position in blocks
+ * @param int pY: Vertical position in blocks
+ * @param int pPiece: Piece to draw
+ * @param int pRotation: 1 of the 4 possible rotations
+ */
 void Board::StorePiece(int pX, int pY, int pPiece, int pRotation) {
   for (int i1 = pX, i2 = 0; i1 < pX + PIECE_BLOCKS; i1++, i2++) {
     for (int j1 = pY, j2 = 0; j1 < pY + PIECE_BLOCKS; j1++, j2++) {
@@ -37,15 +38,10 @@ void Board::StorePiece(int pX, int pY, int pPiece, int pRotation) {
   }
 }
 
-/*
-======================================
-Delete a line of the board by moving all above lines down
-
-Parameters:
-
->> pY: Vertical position in blocks of the line to delete
-======================================
-*/
+/**
+ * @brief Delete a line of the board by moving all above lines down
+ * @param int pY: Vertical position in blocks of the line to delete
+ */
 void Board::DeleteLine(int pY) {
   for (int i = 0; i < BOARD_WIDTH; i++) {
     for (int j = pY; j > 0; j--) {
@@ -55,33 +51,25 @@ void Board::DeleteLine(int pY) {
   }
 }
 
-/*
-======================================
-Returns 1 (true) if the this block of the board is empty, 0 if it is filled
-
-Parameters:
-
->> pX: Horizontal position in blocks
->> pY: Vertical position in blocks
-======================================
-*/
+/**
+ * @brief Checks if a block is free
+ * @param int pX: Horizontal position in blocks
+ * @param int pY: Vertical position in blocks
+ * @return True if empty, 0 is occupied
+ */
 bool Board::IsFreeBlock(int pX, int pY) const {
   return mBoard[pX][pY] == POS_FREE;
 }
 
-/*
-======================================
-Check if the piece can be stored at this position without any collision
-Returns true if the movement is possible, false if it not possible
-
-Parameters:
-
->> pX: Horizontal position in blocks
->> pY: Vertical position in blocks
->> pPiece: Piece to draw
->> pRotation: 1 of the 4 possible rotations
-======================================
-*/
+/**
+ * @brief Check if the piece can be stored at this position without any
+ * collision
+ * @param int pX: Horizontal position in blocks
+ * @param int pY: Vertical position in blocks
+ * @param int pPiece: Piece to draw
+ * @param int pRotation: 1 of the 4 possible rotations*
+ * @return true if the movement is possible, false if it not possible
+ */
 bool Board::IsPossibleMovement(int pX, int pY, int pPiece,
                                int pRotation) const {
 
@@ -104,11 +92,9 @@ bool Board::IsPossibleMovement(int pX, int pY, int pPiece,
   return true;
 }
 
-/*
-======================================
-Delete all the lines that should be removed
-======================================
-*/
+/**
+ * @brief Delete all the lines that should be removed
+ */
 void Board::DeletePossibleLines() {
   // NOTE: Iterates over the height first, hence why indexing here is [j][i]
   for (int i = 0; i < BOARD_HEIGHT; i++) {
@@ -126,12 +112,10 @@ void Board::DeletePossibleLines() {
   }
 }
 
-/*
-======================================
-Check if the game is over becase a piece have achived the upper position
-
-Returns true or false
-======================================
+/**
+ * @brief Check if the game is over becase a piece have achived the upper
+position
+ * @return true if gameover, false if not
 */
 bool Board::IsGameOver() const {
   for (int i = 0; i < BOARD_WIDTH; i++) {
