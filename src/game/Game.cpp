@@ -92,6 +92,7 @@ void Game::MoveDown() {
     CreateNewPiece();
   }
 }
+
 void Game::Drop() {
   while (mBoard.IsPossibleMovement(mPosX, mPosY + 1, mPiece, mRotation)) {
     mPosY++;
@@ -126,3 +127,12 @@ void Game::Update() {
     CreateNewPiece();
   }
 }
+
+int Game::GetPositionX() const { return mPosX; }
+int Game::GetPositionY() const { return mPosY; }
+int Game::GetPiece() const { return mPiece; }
+int Game::GetRotation() const { return mRotation; }
+int Game::GetNextPositionX() const { return mNextPosX; }
+int Game::GetNextPositionY() const { return mNextPosY; }
+int Game::GetNextPiece() const { return mNextPiece; }
+int Game::GetNextRotation() const { return mNextRotation; }
