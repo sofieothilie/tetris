@@ -27,7 +27,6 @@ private:
 
 public:
   Game(Board &pBoard, Pieces &pPieces);
-  ~Game();
   void CreateNewPiece();
   void UpdateGame();
   void Update();

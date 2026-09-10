@@ -170,7 +170,6 @@ const int mPiecesInitialPosition[][4][2] = {
 };
 
 Pieces::Pieces() = default;
-Pieces::~Pieces() = default;
 
 /*
 ======================================

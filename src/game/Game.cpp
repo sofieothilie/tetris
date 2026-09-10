@@ -10,7 +10,6 @@ using namespace std;
 Game::Game(Board &pBoard, Pieces &pPieces) : mBoard(pBoard), mPieces(pPieces) {
   InitGame();
 };
-Game::~Game() = default;
 
 /*
 ======================================
@@ -66,10 +65,6 @@ void Game::CreateNewPiece() {
 
   mNextPiece = GetRand(0, MAX_PIECES);
   mNextRotation = GetRand(0, MAX_ROTATION);
-}
-
-void Game::UpdateGame() {
-  // Move piece, detect collisions, store pieces, etc.
 }
 
 void Game::MoveLeft() {

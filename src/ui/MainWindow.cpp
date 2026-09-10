@@ -10,12 +10,5 @@ MainWindow::MainWindow(QWidget *parent)
 
   resize(400, 600);
 
-  // pGameWidget->setFixedSize(400, 600);
-
-  // auto *container = new QWidget(this);
-  // auto *layout = new QVBoxLayout(container);
-
-  // layout->addWidget(pGameWidget, 0, Qt::AlignCenter);
-
   setCentralWidget(pGameWidget);
 }

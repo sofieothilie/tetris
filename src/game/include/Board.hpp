@@ -27,7 +27,6 @@ private:
 
 public:
   Board(Pieces &pPieces);
-  ~Board();
   bool IsFreeBlock(int pX, int pY) const;
   bool IsPossibleMovement(int pX, int pY, int pPiece, int pRotation) const;
   void StorePiece(int pX, int pY, int pPiece, int pRotation);
