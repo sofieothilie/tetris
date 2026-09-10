@@ -34,7 +34,6 @@ private:
 
 public:
   Game(Board &pBoard, Pieces &pPieces);
-  void Update();
   void MoveLeft();
   void MoveRight();
   void MoveDown();

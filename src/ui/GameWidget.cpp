@@ -18,7 +18,7 @@ GameWidget::GameWidget(QWidget *parent)
     : QWidget(parent), mPieces(), mBoard(mPieces), mGame(mBoard, mPieces),
       mTimer() {
   connect(&mTimer, &QTimer::timeout, this, [this] {
-    mGame.Update();
+    mGame.MoveDown();
     update();
   });
 
