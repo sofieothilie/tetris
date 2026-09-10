@@ -20,9 +20,11 @@ qt_standard_project_setup()
 
 qt_add_executable(tetris
     src/main.cpp
+
     src/ui/MainWindow.cpp
     src/ui/include/MainWindow.hpp
-
+    src/ui/MenuWidget.cpp
+    src/ui/include/MenuWidget.hpp
     src/ui/GameWidget.cpp
     src/ui/include/GameWidget.hpp
     src/ui/BoardRenderer.cpp
