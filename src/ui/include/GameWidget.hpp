@@ -21,14 +21,14 @@ protected:
   void keyPressEvent(QKeyEvent *event) override;
 
 private:
-  Pieces *mPieces;
-  Board *mBoard;
-  Game *mGame;
+  Pieces mPieces;
+  Board mBoard;
+  Game mGame;
   QTimer mTimer;
 
-  int GetXPosInPixels(int pPos);
-  int GetYPosInPixels(int pPos);
-  int GetBoardTop();
+  int GetXPosInPixels(int pPos) const;
+  int GetYPosInPixels(int pPos) const;
+  int GetBoardTop() const;
 
   void DrawPiece(QPainter &painter, int pX, int pY, int pPiece, int pRotation);
   void DrawBoard(QPainter &painter);

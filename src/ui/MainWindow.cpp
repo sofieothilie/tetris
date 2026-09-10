@@ -4,18 +4,19 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
+/**
+ * @brief Creates the main application window.
+ *
+ * Creates the game widget and assigns it as the central widget. Qt owns the
+ * game widget through the parent-child relationship.
+ *
+ * @param QWidget parent Optional Qt parent widget.
+ */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), pGameWidget(new GameWidget(this)) {
   setWindowTitle("Tetris");
 
   resize(400, 600);
-
-  // pGameWidget->setFixedSize(400, 600);
-
-  // auto *container = new QWidget(this);
-  // auto *layout = new QVBoxLayout(container);
-
-  // layout->addWidget(pGameWidget, 0, Qt::AlignCenter);
 
   setCentralWidget(pGameWidget);
 }

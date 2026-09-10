@@ -5,10 +5,10 @@ class Pieces {
 
 public:
   Pieces();
-  ~Pieces();
-  int GetBlockType(int pPiece, int pRotation, int pX, int pY);
-  int GetXInitialPosition(int pPiece, int pRotation);
-  int GetYInitialPosition(int pPiece, int pRotation);
+
+  int GetBlockType(int pPiece, int pRotation, int pX, int pY) const;
+  int GetXInitialPosition(int pPiece, int pRotation) const;
+  int GetYInitialPosition(int pPiece, int pRotation) const;
 };
 
 #endif
