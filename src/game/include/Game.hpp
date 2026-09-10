@@ -29,11 +29,11 @@ private:
 
   int GetRand(int pA, int pB);
   void InitGame();
+  void StorePieceUpdateGame();
+  void CreateNewPiece();
 
 public:
   Game(Board &pBoard, Pieces &pPieces);
-  void CreateNewPiece();
-  void UpdateGame();
   void Update();
   void MoveLeft();
   void MoveRight();

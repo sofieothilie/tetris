@@ -82,14 +82,7 @@ void Game::MoveDown() {
   if (mBoard.IsPossibleMovement(mPosX, mPosY + 1, mPiece, mRotation)) {
     mPosY++;
   } else {
-    mBoard->StorePiece(mPosX, mPosY, mPiece, mRotation);
-    mBoard->DeletePossibleLines();
-
-    if (mBoard->IsGameOver()) {
-      // mIO.Getkey();
-      // exit(0);
-    }
-    CreateNewPiece();
+    StorePieceUpdateGame();
   }
 }
 
@@ -97,14 +90,7 @@ void Game::Drop() {
   while (mBoard.IsPossibleMovement(mPosX, mPosY + 1, mPiece, mRotation)) {
     mPosY++;
   }
-  mBoard->StorePiece(mPosX, mPosY, mPiece, mRotation);
-  mBoard->DeletePossibleLines();
-
-  if (mBoard->IsGameOver()) {
-    // mIO.Getkey();
-    // exit(0);
-  }
-  CreateNewPiece();
+  StorePieceUpdateGame();
 }
 
 void Game::Rotate() {
@@ -113,18 +99,23 @@ void Game::Rotate() {
   }
 }
 
+void Game::StorePieceUpdateGame() {
+  mBoard.StorePiece(mPosX, mPosY, mPiece, mRotation);
+  mBoard.DeletePossibleLines();
+
+  if (mBoard.IsGameOver()) {
+    // mIO.Getkey();
+    // exit(0);
+  }
+  CreateNewPiece();
+}
+
 void Game::Update() {
   // Move piece, detect collisions, store pieces, etc.
   if (mBoard.IsPossibleMovement(mPosX, mPosY + 1, mPiece, mRotation)) {
     mPosY++;
   } else {
-    mBoard->StorePiece(mPosX, mPosY, mPiece, mRotation);
-    mBoard->DeletePossibleLines();
-
-    if (mBoard->IsGameOver()) {
-      return;
-    }
-    CreateNewPiece();
+    StorePieceUpdateGame();
   }
 }
 
