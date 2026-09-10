@@ -2,6 +2,17 @@
 
 #include <QColor>
 #include <QPainter>
+#include <QPainterPath>
+
+enum Colour {
+  RED,         // N
+  GREEN,       // N-inverted
+  YELLOW,      // Square
+  DARKMAGENTA, // L
+  ORANGE,      // L inverted
+  CYAN,        // I
+  MAGENTA      // T
+};
 
 /**
  * @brief Widget responsible for displaying a Tetris game.
@@ -28,6 +39,26 @@ BoardRenderer::BoardRenderer(Game &pGame, Board &pBoard, Pieces &pPieces,
 void BoardRenderer::paintEvent(QPaintEvent *) {
   QPainter painter(this);
   DrawScene(painter);
+}
+
+/**
+ * @brief Draws the complete game scene.
+ *
+ * Renders the board and its occupied cells, followed by the currently falling
+ * piece and the preview of the next piece.
+ *
+ * @param pPainter Painter used for rendering.
+ */
+void BoardRenderer::DrawScene(QPainter &pPainter) {
+  DrawBoard(
+      pPainter); // Draw the delimitation lines and blocks stored in the board
+  DrawOccupiedBlocks(pPainter); // Draw occupied blocks
+  DrawPiece(pPainter, mGame.GetPositionX(), mGame.GetPositionY(),
+            mGame.GetPiece(),
+            mGame.GetRotation()); // Draw the playing piece
+  DrawPiece(pPainter, mGame.GetNextPositionX(), mGame.GetNextPositionY(),
+            mGame.GetNextPiece(),
+            mGame.GetNextRotation()); // Draw the next piece
 }
 
 /**
@@ -61,10 +92,9 @@ void BoardRenderer::DrawPiece(QPainter &painter, int pX, int pY, int pPiece,
 }
 
 /**
- * @brief Draws the board boundary and occupied cells.
+ * @brief Draws the board boundary and "Next Piece"-square.
  *
- * Calculates the board position within the widget, draws its borders, and
- * renders every occupied board cell.
+ * Calculates the board position within the widget, draws its borders and lines.
  *
  * @param pPainter Painter used for rendering.
  */
@@ -72,36 +102,76 @@ void BoardRenderer::DrawBoard(QPainter &pPainter) {
 
   // Calculate the limits of the board in pixels
   const int boardWidth = BLOCK_SIZE * BOARD_WIDTH;
-  const int mX1 = (width() - boardWidth) / 2;
-  const int mX2 = mX1 + boardWidth;
-  const int mY = GetBoardTop();
-  assert(mY > MIN_VERTICAL_MARGIN);
+  const int boardHeight = BLOCK_SIZE * BOARD_HEIGHT;
+  const int mXleft = GetLeftPixelBoard() / 2;
+  const int mXright = mXleft + boardWidth;
+  const int mYtop = GetBoardTop();
+  const int mYbottom = mYtop + boardHeight;
 
-  int boardBottom = mY + BLOCK_SIZE * BOARD_HEIGHT;
+  assert(mYtop > MIN_VERTICAL_MARGIN);
 
-  // Colourise the outer edges of the board
-  // Left edge
-  pPainter.fillRect(mX1 - BOARD_LINE_WIDTH - 1, mY, BOARD_LINE_WIDTH,
-                    boardBottom + BOARD_LINE_WIDTH - mY, Qt::blue);
+  DrawRectangle(pPainter, mXleft, mXright, mYtop, mYbottom, BOARD_LINE_WIDTH);
 
-  // Right edge
-  pPainter.fillRect(mX2, mY, BOARD_LINE_WIDTH,
-                    boardBottom + BOARD_LINE_WIDTH - mY, Qt::blue);
+  DrawRectangle(pPainter, mXright + BLOCK_SIZE,
+                mXright + (PIECE_BLOCKS + 1) * BLOCK_SIZE, mYtop + BLOCK_SIZE,
+                mYtop + (PIECE_BLOCKS + 1) * BLOCK_SIZE, BOARD_LINE_WIDTH);
+}
 
-  // Bottom edge
-  pPainter.fillRect(mX1 - BOARD_LINE_WIDTH - 1, boardBottom,
-                    mX2 + BOARD_LINE_WIDTH - (mX1 - BOARD_LINE_WIDTH - 1),
-                    BOARD_LINE_WIDTH, Qt::blue);
-  // Bottom edge
-  pPainter.fillRect(mX1 - BOARD_LINE_WIDTH, GetBoardTop(),
-                    mX2 + BOARD_LINE_WIDTH - (mX1 - BOARD_LINE_WIDTH - 1),
-                    BOARD_LINE_WIDTH, Qt::blue);
+/**
+ * @brief Draws the board boundary and "Next Piece"-square.
+ *
+ * Calculates the board position within the widget, draws its borders and lines.
+ *
+ * @param pPainter Painter used for rendering.
+ * @param int mXleft: left pixel corner of square to be drawn
+ * @param int mXright: right pixel corner of square to be drawn
+ * @param int mYtop: top pixel corner of square to be drawn
+ * @param int mYbottom: bottom pixel corner of square to be drawn
+ * @param int mThickness: line thickness inside the square
+ */
+void BoardRenderer::DrawRectangle(QPainter &pPainter, int mXleft, int mXright,
+                                  int mYtop, int mYbottom, int mThickness) {
+
+  // // Calculate the limits of the square in pixels
+  const int RectangleWidth = mXright - mXleft;
+  const int RectangleHeight = mYbottom - mYtop;
+
+  pPainter.setBrush(QBrush(Qt::lightGray));
+  pPainter.setPen(QPen(Qt::black, mThickness));
+
+  pPainter.drawRect(mXleft - mThickness / 2, mYtop - mThickness / 2,
+                    RectangleWidth + 2 * mThickness / 2,
+                    RectangleHeight + 2 * mThickness / 2);
+
+  pPainter.setPen(QPen(Qt::gray, 1));
+  // Vertical board lines
+  for (int i = 0; i < RectangleWidth / BLOCK_SIZE + 1; i++) {
+    pPainter.drawLine(mXleft + i * BLOCK_SIZE - 0.5, mYtop,
+                      mXleft + i * BLOCK_SIZE - 0.5, mYbottom - 1);
+  }
+  // Hortizontal boardlines
+  for (int i = 0; i < RectangleHeight / BLOCK_SIZE + 1; i++) {
+    pPainter.drawLine(mXleft - 1, mYtop + i * BLOCK_SIZE - 1, mXright - 1,
+                      mYtop + i * BLOCK_SIZE - 1);
+  }
+}
+
+/**
+ * @brief Draws occupied blocks
+ * @param pPainter Painter used for rendering.
+ */
+void BoardRenderer::DrawOccupiedBlocks(QPainter &pPainter) {
+  const int mXleft = GetLeftPixelBoard() / 2;
+  const int mYtop = GetBoardTop();
+
+  // Color myColor = GREEN;
 
   // Colourise the occupied blocks inside the board
   for (int i = 0; i < BOARD_WIDTH; i++) {
     for (int j = 0; j < BOARD_HEIGHT; j++) {
       if (!(mBoard.IsFreeBlock(i, j))) {
-        pPainter.fillRect(mX1 + i * BLOCK_SIZE, mY + j * BLOCK_SIZE,
+
+        pPainter.fillRect(mXleft + i * BLOCK_SIZE, mYtop + j * BLOCK_SIZE,
                           BLOCK_SIZE - 1, BLOCK_SIZE - 1, Qt::red);
       }
     }
@@ -109,22 +179,19 @@ void BoardRenderer::DrawBoard(QPainter &pPainter) {
 }
 
 /**
- * @brief Draws the complete game scene.
- *
- * Renders the board and its occupied cells, followed by the currently falling
- * piece and the preview of the next piece.
- *
- * @param pPainter Painter used for rendering.
+ * @brief Gets the left pixel inside the board
+ * @return int
  */
-void BoardRenderer::DrawScene(QPainter &pPainter) {
-  DrawBoard(
-      pPainter); // Draw the delimitation lines and blocks stored in the board
-  DrawPiece(pPainter, mGame.GetPositionX(), mGame.GetPositionY(),
-            mGame.GetPiece(),
-            mGame.GetRotation()); // Draw the playing piece
-  DrawPiece(pPainter, mGame.GetNextPositionX(), mGame.GetNextPositionY(),
-            mGame.GetNextPiece(),
-            mGame.GetNextRotation()); // Draw the next piece
+int BoardRenderer::GetLeftPixelBoard() const {
+  return (width() - BLOCK_SIZE * BOARD_WIDTH);
+}
+
+/**
+ * @brief Returns the vertical height of the board in pixels.
+ * @return Height of board in pixels as an int
+ */
+int BoardRenderer::GetBoardTop() const {
+  return (this->height() - (BLOCK_SIZE * BOARD_HEIGHT + BOARD_LINE_WIDTH)) / 2;
 }
 
 /**
@@ -139,6 +206,7 @@ int BoardRenderer::GetXPosInPixels(int pPos) const {
 
   return boardLeft + pPos * BLOCK_SIZE;
 }
+
 /**
  * @brief Returns the vertical position (in pixels) of the block given like
 parameter
@@ -147,12 +215,4 @@ parameter
 */
 int BoardRenderer::GetYPosInPixels(int pPos) const {
   return GetBoardTop() + pPos * BLOCK_SIZE;
-}
-
-/**
- * @brief Returns the vertical height of the board in pixels.
- * @return Height of board in pixels as an int
- */
-int BoardRenderer::GetBoardTop() const {
-  return (this->height() - (BLOCK_SIZE * BOARD_HEIGHT + BOARD_LINE_WIDTH)) / 2;
 }

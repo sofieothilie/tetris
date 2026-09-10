@@ -1,6 +1,6 @@
 #pragma once
-#include "Game.hpp"
 #include "BoardRenderer.hpp"
+#include "Game.hpp"
 #include <QTimer>
 #include <QWidget>
 

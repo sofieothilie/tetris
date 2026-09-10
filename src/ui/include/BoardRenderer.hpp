@@ -27,8 +27,12 @@ private:
   int GetXPosInPixels(int pPos) const;
   int GetYPosInPixels(int pPos) const;
   int GetBoardTop() const;
+  int GetLeftPixelBoard() const;
+  void DrawRectangle(QPainter &pPainter, int mXleft, int mXright, int mYtop,
+                     int mYbottom, int mThickness);
 
   void DrawPiece(QPainter &pPainter, int pX, int pY, int pPiece, int pRotation);
   void DrawBoard(QPainter &pPainter);
   void DrawScene(QPainter &pPainter);
+  void DrawOccupiedBlocks(QPainter &pPainter);
 };
